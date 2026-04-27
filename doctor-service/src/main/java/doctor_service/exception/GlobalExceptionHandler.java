@@ -35,12 +35,14 @@ public class GlobalExceptionHandler {
 
     // ✅ Catch ALL (Fallback)
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<String>> handleAll(Exception ex) {
+    public ResponseEntity<ApiResponse<Object>> handleException(Exception ex) {
 
-        return new ResponseEntity<>(
-                new ApiResponse<>(false, "Something went wrong", null),
-                HttpStatus.INTERNAL_SERVER_ERROR
-        );
+        return ResponseEntity.internalServerError()
+                .body(new ApiResponse<>(
+                        false,
+                        ex.getMessage(),   // 👈 IMPORTANT
+                        null
+                ));
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationErrors(
